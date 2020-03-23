@@ -99,6 +99,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-
-
-# https://www.guru99.com/xpath-selenium.html#1
