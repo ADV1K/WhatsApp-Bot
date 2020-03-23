@@ -1,5 +1,5 @@
 from selenium import webdriver
-from whatsapp import *
+from whatsapp_old import *
 import requests
 
 sent_jokes = []
