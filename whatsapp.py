@@ -29,9 +29,10 @@ class WhastsApp:
 		options = Options()
 		options.headless = headless
 		# user agent is required for headless chrome to work properly.
-		otions.add_argument("user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
+		options.add_argument("user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
 		# options.add_argument("--window-size=1366x768")
-
+		#options.add_argument("--user-data")
+		
 		chrome_driver = os.path.join(os.getcwd(), "chromedriver.exe")
 
 		self.driver = webdriver.Chrome(options=options, executable_path=chrome_driver)
@@ -99,7 +100,7 @@ class WhastsApp:
 		return self.send_to(to, msg)
 
 	def send_to_all(self, msg):
-		for recipient in self.get_all_chats(self.driver):
+		for recipient in self.get_all_chats():
 			self.send_to(recipient, msg)
 
 	def get_all_chats(self):
