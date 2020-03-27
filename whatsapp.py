@@ -36,7 +36,6 @@ class WhastsApp:
 		chrome_driver = os.path.join(os.getcwd(), "chromedriver.exe")
 
 		self.driver = webdriver.Chrome(options=options, executable_path=chrome_driver)
-		self.driver.get('https://web.whatsapp.com/')
 
 		# self.driver.save_screenshot('woops1.png')
 		self.wait_for_log_in()
@@ -50,8 +49,7 @@ class WhastsApp:
 
 	def wait_for_log_in(self):
 		"Waits for user to scan the qr code. displays qr code in a tkinter window if in headless mode"
-		if self.driver.current_url != self.WW_URL:
-			self.driver.get(self.WW_URL)
+		self.driver.get(self.WW_URL)
 
 		if self.is_headless:
 			# wait untill the qr code is loaded and then grab it
