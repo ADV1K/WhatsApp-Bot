@@ -1,3 +1,7 @@
+# Please please don't copy my code without crediting me!
+# author : Advik
+# url    : https://github.com/ADV1K/WhatsApp-Bot
+# ------------------------------------------------------
 # TODO:
 # Exceptions:
 #   - no internet connection
