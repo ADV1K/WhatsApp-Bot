@@ -31,31 +31,39 @@ class WhastsApp:
 		# user agent is required for headless chrome to work properly.
 		options.add_argument("--user-agent=User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36")
 		# options.add_argument("--window-size=1366x768")
-		#options.add_argument("--user-data-dir=whatsapp-data-dir")  # saves the whatsapp login so you dont have to login everytime 
-		
+		#options.add_argument("--user-data-dir=whatsapp-data-dir")  # saves the whatsapp login so you dont have to login everytime
+
 		chrome_driver = os.path.join(os.getcwd(), "chromedriver.exe")
 
 		self.driver = webdriver.Chrome(options=options, executable_path=chrome_driver)
+		self.driver.get('https://web.whatsapp.com/')
 
 		# self.driver.save_screenshot('woops1.png')
 		self.wait_for_log_in()
 
-	def show_qr_code(self):
+	def show_qr_code(self, qr_code_filename=None, qr_code_base64=None):
 		"Displays the QR Code if chrome is running in headless mode"
 		self.tkroot = tk.Tk()
-		im = tk.PhotoImage(data=self.qr_code_base64)
+		if qr_code_base64:
+			im = tk.PhotoImage(data=qr_code_base64)
+		else:
+			im = tk.PhotoImage(file=qr_code_filename)
 		tk.Label(self.tkroot, image=im).pack()
 		self.tkroot.mainloop()
 
 	def wait_for_log_in(self):
 		"Waits for user to scan the qr code. displays qr code in a tkinter window if in headless mode"
-		self.driver.get(self.WW_URL)
+		if self.driver.current_url != self.WW_URL:
+			self.driver.get(self.WW_URL)
 
 		if self.is_headless:
 			# wait untill the qr code is loaded and then grab it
-			qr_image = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div[2]/div[1]/div/div[2]/div/img')))
-			self.qr_code_base64 = qr_image.get_attribute('src').split(',')[1]
-			Thread(target=self.show_qr_code).start()  # show qr code (using tkinter) if we're in headless mode
+			#qr_image = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div[2]/div[1]/div/div[2]/div/img')))
+			#qr_code_base64 = qr_image.get_attribute('src').split(',')[1]
+			#Thread(target=self.show_qr_code, kwargs={'qr_code_base64': qr_code_base64}).start()  # show qr code (using tkinter) if we're in headless mode
+			WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div/div/div[2]/div[1]/div/div[2]/div/canvas'))).screenshot('qr.png')  # save the qr code in qr.png
+			t = Thread(target=self.show_qr_code, kwargs={'qr_code_filename': 'qr.png'})
+			t.start()
 
 		while 1:
 			if "connected" in self.driver.page_source:
@@ -113,7 +121,7 @@ def main():
 	print('[*] waiting for user to log in')
 	w = WhastsApp(headless=True)  # automatically waits for log in
 	print('[*] successfully logged in')
-	w.send_to([f'selenium testing {i}' for i in range(1, 4)], 'hello')
+	# w.send_to([f'selenium testing {i}' for i in range(1, 4)], 'hello')
 
 
 if __name__ == '__main__':
