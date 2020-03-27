@@ -122,4 +122,3 @@ if __name__ == '__main__':
 # try: goto chrome developer console > right click > Copy > Copy XPath
 # https://some-random-api.ml/
 # theysaidso.com
-# https://www.guru99.com/xpath-selenium.html#1
